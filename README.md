@@ -12,7 +12,7 @@ Tim sačinjavaju 3 člana:
 
 1. Ondrej Macko MIT7/20 (OptimusPRIME) - Team Lead, .net, SQL, JavaScript
 2. Bojan Vasic MIT8/20 (Vasaqaz) - .net, SQL, test
-3. Filip Kondic MIT?/20 (PhilipSr21) - .net, JavaScript, test
+3. Filip Kondic MIT18/20 (PhilipSr21) - .net, JavaScript, test
 
 # Cilj projekta
 Cilj projekta je izrada web aplikacije koja će omogućiti:
