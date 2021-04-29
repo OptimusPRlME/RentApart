@@ -456,3 +456,49 @@ GO
 ALTER TABLE [dbo].feedback CHECK CONSTRAINT [FK_Feedback_Apartment]
 GO
 
+
+
+
+/*** calendar ***/
+CREATE TABLE [dbo].[Calendar](
+	[CalendarId] [int] IDENTITY(1,1) NOT NULL,
+	[Date] [datetime] NOT NULL,
+	[Year] [int] NOT NULL,
+	[Quarter] [int] NOT NULL,
+	[Month] [int] NOT NULL,
+	[MonthName] [varchar](9) NOT NULL,
+	[Week] [int] NOT NULL,
+	[Day] [int] NOT NULL,
+	[DayName] [varchar](9) NOT NULL,
+	[DayOfYear] [int] NOT NULL,
+	[Weekday] [int] NOT NULL,
+	[KindOfDay] [varchar](10) NOT NULL,
+	[Description] [varchar](50) NULL,
+	[RentUserId] [int] NULL,
+	[RentalUserId] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[CalendarId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Calendar]  WITH CHECK ADD  CONSTRAINT [FK_Calendar_user] FOREIGN KEY([RentUserId])
+REFERENCES [dbo].[user] ([Id])
+GO
+
+ALTER TABLE [dbo].[Calendar] CHECK CONSTRAINT [FK_Calendar_user]
+GO
+
+ALTER TABLE [dbo].[Calendar]  WITH CHECK ADD  CONSTRAINT [FK_Calendar_user1] FOREIGN KEY([RentalUserId])
+REFERENCES [dbo].[user] ([Id])
+GO
+
+ALTER TABLE [dbo].[Calendar] CHECK CONSTRAINT [FK_Calendar_user1]
+GO
+
+ALTER TABLE [dbo].[Calendar]  WITH CHECK ADD  CONSTRAINT [Calendar_ck] CHECK  (([Year]>(1900) AND ([Quarter]>=(1) AND [Quarter]<=(4)) AND ([Month]>=(1) AND [Month]<=(12)) AND ([MonthName]='December' OR [MonthName]='November' OR [MonthName]='October' OR [MonthName]='September' OR [MonthName]='August' OR [MonthName]='July' OR [MonthName]='June' OR [MonthName]='May' OR [MonthName]='April' OR [MonthName]='March' OR [MonthName]='February' OR [MonthName]='January') AND ([Week]>=(1) AND [Week]<=(53)) AND ([Day]>=(1) AND [Day]<=(31)) AND ([DayName]='Sunday' OR [DayName]='Saturday' OR [DayName]='Friday' OR [DayName]='Thursday' OR [DayName]='Wednesday' OR [DayName]='Tuesday' OR [DayName]='Monday') AND ([DayOfYear]>=(1) AND [DayOfYear]<=(366)) AND ([Weekday]>=(1) AND [Weekday]<=(7)) AND ([KindOfDay]='Workday' OR [KindOfDay]='Sunday' OR [KindOfDay]='Saturday' OR [KindOfDay]='Holiday')))
+GO
+
+ALTER TABLE [dbo].[Calendar] CHECK CONSTRAINT [Calendar_ck]
+GO
