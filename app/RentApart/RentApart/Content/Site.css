@@ -1,0 +1,74 @@
+﻿html, body, #map {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    padding-top: 56px;
+    padding-bottom: 0px;
+    box-sizing: border-box;
+    margin: 0px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
+.navbar.second-navbar {
+    margin-top: 56px;
+    background: grey !important;
+    transition: all .5s ease-in-out;
+}
+
+.navbar.second-navbar.top-nav-collapse {
+    margin-top: 45px;
+}
+
+.geocoder-control-input {
+    position:relative!important;
+}
+
+.geocoder-control-suggestions {
+    width:25%!important;
+}
+
+#refreshButton {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 5px;
+    border-color: gray;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    opacity: 0.6;
+    text-align: center;
+    font-size:11px;
+    z-index: 500;
+}
+
+#refreshButton:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+

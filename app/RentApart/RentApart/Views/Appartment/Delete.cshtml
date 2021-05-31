@@ -1,0 +1,73 @@
+﻿@model RentApart.Models.Appartment.apartment
+
+@{
+    ViewBag.Title = "Delete";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Oglasi
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-edit"></i> Početna</a></li>
+            <li class="active">Dodaj novi</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Deaktivirajte oglas</h3>
+                    </div>
+
+                    <h3>Da li ste sigurni da zelite da deaktivirate ovaj oglas?</h3>
+                    <div>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                            
+                            </div>
+                            <div class="form-actions no-color">
+                                <input type="submit" value="Deaktiviraj" class="btn btn-success" />
+                                <button class="btn btn-danger">@Html.ActionLink("Odustani", "Index")</button>
+                            </div>
+                            @Html.HiddenFor(model => model.UserId)
+                            @Html.HiddenFor(model => model.AddressNumberId)
+                            @Html.HiddenFor(model => model.type)
+                            @Html.HiddenFor(model => model.Rooms)
+                            @Html.HiddenFor(model => model.Area)
+                            @Html.HiddenFor(model => model.Floor)
+                            @Html.HiddenFor(model => model.Description)
+                            @Html.HiddenFor(model => model.Price)
+                            @Html.HiddenFor(model => model.Status)
+                            @Html.HiddenFor(model => model.NumberOfFloors)
+                            @Html.HiddenFor(model => model.YearOfConstruction)
+                            @Html.HiddenFor(model => model.Furnishing)
+                            @Html.HiddenFor(model => model.NumberOfBedrooms)
+                            @Html.HiddenFor(model => model.NumberOfBathrooms)
+                            @Html.HiddenFor(model => model.DistanceFromCenter)
+                            @Html.HiddenFor(model => model.Renovated)
+                            @Html.HiddenFor(model => model.Heating)
+                            @Html.HiddenFor(model => model.Deposit)
+                            @Html.HiddenFor(model => model.MinimumLeaseLength)
+                            @Html.HiddenFor(model => model.PaymentDue)
+                            @Html.HiddenFor(model => model.Available)
+                            @Html.HiddenFor(model => model.MaximumNumberOfTenants)
+                            @Html.HiddenFor(model => model.pictures)
+                            @Html.HiddenFor(model => model.Deleted, new { Value = "true" })
+
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

@@ -1,0 +1,81 @@
+﻿@using RentApart.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Prijava";
+}
+
+<style>
+    #intro {
+        background-image: url(../Content/img/bg.jpg);
+        height: 100%;
+    }
+    body {
+        padding-bottom: 0;
+    }
+
+    html, body, #intro {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+<div id="intro" class="bg-image shadow-2-strong">
+    <div class="mask d-flex align-items-center h-100" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-md-8">
+                    <div class="bg-white rounded shadow-5-strong p-4">
+                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <form>
+
+                                <!-- Email input -->
+                                <div class="form-outline mb-2">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                    @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+                                <!-- Password input -->
+                                <div class="form-outline mb-2 mt-4">
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                    @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                                <!-- 2 column grid layout for inline styling -->
+                                <div class="row mb-2 mt-4">
+                                    <div class="col d-flex justify-content-center">
+                                        <!-- Checkbox -->
+                                        <div class="form-check">
+                                            @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
+                                            @Html.LabelFor(m => m.RememberMe, new { @class = "form-check-label" })
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col text-center">
+                                        @Html.ActionLink("Zaboravljena lozinka", "ForgotPassword")
+                                    </div>
+                                </div>
+
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary btn-block mt-2">PRIJAVI SE</button>
+                            </form>
+
+                            <p class="mt-4 mb-0 text-center">
+                                @Html.ActionLink("Registrujte se kao novi korisnik", "Register")
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/login")
+}

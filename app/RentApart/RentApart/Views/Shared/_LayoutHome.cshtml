@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - RentApart</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
+    <script src="https://d19vzq90twjlae.cloudfront.net/leaflet-0.7/leaflet.js"></script>
+    <!-- Load Esri Leaflet Geocoder from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.css"
+          integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+          crossorigin="">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+</head>
+<body style="padding-top: 108px!important;">
+
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark double-nav">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                @Html.ActionLink("RentApart", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ms-auto">
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </nav>
+        <!-- /.Navbar -->
+        <!-- Second Navbar -->
+        <nav class="navbar second-navbar navbar-expand-sm navbar-dark fixed-top bg-gray double-nav" style="height:56px!important">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-2" style="width: 18%;">
+                            <div class="form-group">
+                                <div class="col-md-5" id="custom-search" style="width:100%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="width: 10%;">
+                            <select class="form-select btn-primary form-select-sm sobe" aria-label=".form-select-sm example">
+                                <option selected>BROJ SOBA:</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="amount" style="color:white;">CENA:</label>
+                            <input type="text" id="amount" style="border:0; color:white;background:none; font-weight:bold; width:23%;">
+                            <div id="slider-range" style="display:inline-block;width:60%;vertical-align:middle;"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="area" style="color:white;">KVADRATURA:</label>
+                            <input type="text" id="area" style="border:0; color:white;background:none; font-weight:bold; width:23%;">
+                            <div id="slider-range-area" style="display:inline-block;width:50%;vertical-align:middle;"></div>
+                        </div>
+                        <div class="col-md-1" style="width: 10%;">
+                            <select class="form-select btn-primary form-select-sm namestenost" aria-label=".form-select-sm example">
+                                <option selected>NAMEŠTENOST:</option>
+                                <option value="NAMEŠTEN">NAMEŠTEN</option>
+                                <option value="POLU-NAMEŠTEN">POLU-NAMEŠTEN</option>
+                                <option value="PRAZAN">PRAZAN</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2" style="width: 12%;">
+                            <button type="button" class="btn btn-light btn-sm reset">Poništi sve filtere</button>
+                        </div>
+
+                        </div>
+                    </div>
+            </div>
+        </nav>
+        <!-- /.Navbar -->
+    </header>
+    <!--/.Double navigation-->
+
+    <div id="map">
+        <button id="refreshButton">
+            Moja lokacija
+        </button>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/select")
+    @RenderSection("scripts", required: false)
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <script src="https://maximeh.github.io/leaflet.bouncemarker/bouncemarker.js"></script>
+    <script src="https://unpkg.com/esri-leaflet@3.0.2/dist/esri-leaflet.js"
+            integrity="sha512-myckXhaJsP7Q7MZva03Tfme/MSF5a6HC2xryjAM4FxPLHGqlh5VALCbywHnzs2uPoF/4G/QVXyYDDSkp5nPfig=="
+            crossorigin=""></script>
+    <script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"
+            integrity="sha512-vZbMwAf1/rpBExyV27ey3zAEwxelsO4Nf+mfT7s6VTJPUbYmD2KSuTRXTxOFhIYqhajaBU+X5PuFK1QJ1U9Myg=="
+            crossorigin=""></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @Scripts.Render("~/bundles/geo")
+
+    <script>
+                    //$(document).ready(function () {
+
+                    //    $('.select2').select2({
+                    //        placeholder: "Izaberite mesto",
+                    //        dataType: 'json',
+                    //        minimumInputLength: 2,
+                    //        allowClear: true,
+                    //        ajax: {
+                    //            url: "/Home/GetCities",
+                    //            data: function (params) {
+                    //                return {
+                    //                    grad: params.term// search term
+                    //                };
+                    //            },
+                    //            processResults: function (data) {
+                    //                return {
+                    //                    results: $.map(data, function (item) {
+                    //                        return {
+                    //                            text: item.City,
+                    //                            id: item.LocationId
+                    //                        }
+                    //                    })
+                    //                };
+                    //            }
+                    //        }
+                    //    });
+                    //    });
+
+
+                    //    AjaxCall('/Home/GetRooms', null).done(function (response) {
+                    //        if (response.length > 0) {
+                    //            $('#brojsoba').html('');
+                    //            var options = '';
+                    //            options += '<option value="Select">Select</option>';
+                    //            for (var i = 0; i < response.length; i++) {
+                    //                options += '<option value="' + response[i].ApartmentId + '">' + response[i].Rooms + '</option>';
+                    //            }
+                    //            $('#brojsoba').append(options);
+
+                    //        }
+                    //    }).fail(function (error) {
+                    //        alert(error.StatusText);
+                    //    });
+
+
+                    //});
+
+                    //function AjaxCall(url, data, type) {
+                    //    return $.ajax({
+                    //        url: url,
+                    //        type: type ? type : 'GET',
+                    //        data: data,
+                    //        contentType: 'application/json'
+                    //    });
+                    //}
+
+
+
+
+    </script>
+
+    @RenderBody()
+
+
+</body>
+</html>

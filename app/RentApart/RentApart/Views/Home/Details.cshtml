@@ -1,0 +1,27 @@
+﻿@model RentApart.Models.Appartment.AppartmentModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">Detalji</h4>
+    </div>
+
+
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AppartmentId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppartmentId)
+        </dd>
+
+
+    </dl>
+</div> 

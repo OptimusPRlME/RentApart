@@ -1,40 +1,601 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Pocetna";
 }
 
 
-<html>
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
 
-<body>
-    <style>
-        body {
-            padding: 0;
-            margin: 0;
+</div>
+
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+
+    var mbx = new L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+    }),
+        mpn = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a',
+            tileSize: 512,
+            zoomOffset: -1
+        }),
+        esri = new L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            tileSize: 512,
+            zoomOffset: -1
+        }),
+
+        google = new L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: 'Map data &copy; <a href="https://www.google.com">Google</a',
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            tileSize: 512,
+            zoomOffset: -1
+        });
+
+    var map = L.map('map', {
+        layers: mbx
+    });
+
+    var baseMaps = {
+        "Mapbox": mbx,
+        "Open street map": mpn,
+        "Esri Satelite": esri,
+        "Google": google
+    };
+
+
+    var currentMarker = null;
+    var circle = null;
+    var searchControl = null;
+    function onLocationFound(e) {
+        var radius = Math.round(e.accuracy / 3, 2);
+
+        currentMarker = new L.marker(e.latlng,
+            {
+                bounceOnAdd: true,
+                bounceOnAddCallback: function () { },
+                id: 999
+            });
+
+        circle = new L.circle(e.latlng, radius);
+
+        markermap(currentMarker, circle);
+
+        function markermap(currentMarker, circle) {
+            currentMarker.addTo(map)
+                .bindPopup("Nalazite se u radijusu od " + radius + " metara od ove tacke", { autoClose: true }).openPopup();
+
+            currentMarker.on('click', function () {
+                currentMarker.bounce();
+            });
+
+            circle.addTo(map);
+
+            setTimeout(function () {
+                map.closePopup()
+            }, 3000);
         }
 
-        html, body, container, #map {
-            height: 100%;
-            width: 100%;
+        /* adresa trenutne lokacije */
+        var geocodeService = L.esri.Geocoding.geocodeService({
+            apikey: "AAPK4ce37f3e60db4ac49bd267e36b50bbb3CL2Z_jO1jSyv94v9Ho2roWxUemZlmxy3Pzb5eh825pjViMUT9WL-CNv2neVbManY",
+        });
+
+        geocodeService.reverse().latlng(e.latlng).run(function (error, result) {
+            if (error) {
+                return;
+            }
+
+            var curr = result.address.Match_addr;
+
+            /** Pretraga **/
+
+            searchControl = L.esri.Geocoding.geosearch({
+                placeholder: curr,//"Unesite mesto",
+                title: "Unesite mesto za pretragu",
+                useMapBounds: false,
+                providers: [
+                    L.esri.Geocoding.arcgisOnlineProvider({
+                        // API Key to be passed to the ArcGIS Online Geocoding Service
+                        apikey: "AAPK4ce37f3e60db4ac49bd267e36b50bbb3CL2Z_jO1jSyv94v9Ho2roWxUemZlmxy3Pzb5eh825pjViMUT9WL-CNv2neVbManY",
+
+                    })
+                ]
+            });
+
+            searchControl.addTo(map);
+
+            var results = L.layerGroup().addTo(map);
+
+            searchControl.on("results", function (data) {
+
+                results.clearLayers();
+                for (var i = data.results.length - 1; i >= 0; i--) {
+                    results.addLayer(L.marker(data.results[i].latlng));
+                }
+
+            });
+
+            var newParent = document.getElementById('custom-search');
+            var oldParent = document.getElementsByClassName("geocoder-control leaflet-control")
+
+            while (oldParent[0].childNodes.length > 0) {
+                newParent.appendChild(oldParent[0].childNodes[0]);
+            }
+
+        });
+    }
+
+    function onLocationError(e) {
+        console.log(e.message);
+    }
+
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+    map.locate({ setView: true, maxZoom: 14 });
+
+
+    var button = document.getElementById('refreshButton');
+    button.addEventListener('click', function () {
+        map.removeLayer(currentMarker);
+        map.removeLayer(circle);
+        $("#custom-search").empty();
+        map.removeControl(searchControl);
+        map.locate({ setView: true, maxZoom: 14 });
+    });
+
+
+
+    L.control.layers(baseMaps).addTo(map);
+
+
+    /** Stanovi **/
+    //$.ajax({
+    //    type: "POST",
+    //    url: '/Home/GetApartments',
+    //    success: function (data) {
+    //        var result = JSON.stringify(data);
+    //        for (var i = 0; i < result.length; ++i) {
+    //            var popup = '<b>Grad:</b> ' + data[i].City +
+    //                        '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
+    //                        '<br/><b>Kvadratura:</b> ' + data[i].Area +
+    //                        '<br/><b>Broj soba:</b> ' + data[i].Rooms +
+    //                '<br/><b>Cena:</b> ' + data[i].Price +
+    //                '<br/><br/><b><a href ="#">Pogledaj Stan</a></b>' ;
+
+    //            L.marker([data[i].Lat, data[i].Lng], {bounceOnAdd: true})
+    //                .bindPopup(popup)
+    //                .addTo(map);
+    //        }
+
+    //    },
+    //    error: function (xhr) {
+
+    //        console.log(xhr.responseText);
+    //        alert("Error has occurred..");
+    //    }
+    //});
+
+
+
+    var markers = []
+    $.ajax({
+        type: "POST",
+        url: '/Home/GetApartments',
+        success: function (data) {
+            //var result = JSON.stringify(data);
+            //console.log(data,result)
+            for (var i = 0; i < data.length; ++i) {
+                var id;
+                if (markers.length < 1) id = 0
+                else id = markers[markers.length - 1]._id + 1;
+
+                var popup = '<b>Grad:</b> ' + data[i].City +
+                    '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
+                    '<br/><b>Kvadratura:</b> ' + data[i].Area +
+                    '<br/><b>Broj soba:</b> ' + data[i].Rooms +
+                    '<br/><b>Cena:</b> ' + data[i].Price +
+                    '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+
+                myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
+                myMarker._id = id
+
+                var myPopup = myMarker.bindPopup(popup, {
+                    closeButton: false
+                });
+                map.addLayer(myMarker)
+                markers.push(myMarker)
+            }
+        },
+        error: function (xhr) {
+
+            console.log(xhr.responseText);
+            alert("Error has occurred..");
         }
-    </style>
+    });
 
-    <div id="map"></div>
+    /** filtriranje po osnovu broja soba **/
+    $("select.sobe").change(function () {
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        //var map = L.map('map')
-        //    .setView([13.7542, 100.493], 12);
+        $(".leaflet-marker-icon").remove();
+        $(".leaflet-popup").remove();
+        $(".leaflet-marker-shadow").remove();
 
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        var min = $('#slider-range').slider("values")[0];
+        var max = $('#slider-range').slider("values")[1];
+        var minA = $('#slider-range-area').slider("values")[0];
+        var maxA = $('#slider-range-area').slider("values")[1];
+        furn = $("select.namestenost").children("option:selected").val();
+        if (furn === "NAMEŠTENOST:") {
+            furn = "SVE"
+        }
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+        rooms = $(this).children("option:selected").val();
+        if (rooms === "BROJ SOBA:") {
+            rooms = 0
+        }
+        var markers = []
+        $.ajax({
+            type: "POST",
+            url: '/Home/GetFilter',
+            data: { min: min, max: max, room: rooms, minA: minA, maxA: maxA, furn: furn },
+            success: function (data) {
+                for (var i = 0; i < data.length; ++i) {
+                    var id;
+                    if (markers.length < 1) id = 0
+                    else id = markers[markers.length - 1]._id + 1;
 
-        L.marker([51.5, -0.09]).addTo(map)
-            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-            .openPopup();
-    </script>
+                    var popup = '<b>Grad:</b> ' + data[i].City +
+                        '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
+                        '<br/><b>Kvadratura:</b> ' + data[i].Area +
+                        '<br/><b>Broj soba:</b> ' + data[i].Rooms +
+                        '<br/><b>Cena:</b> ' + data[i].Price +
+                        '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
+                        '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
 
-</body>
-</html> 
+                    myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
+                    //.bindPopup(popup)
+                    myMarker._id = id
+
+                    var myPopup = myMarker.bindPopup(popup, {
+                        closeButton: false
+                    });
+                    map.addLayer(myMarker)
+                    markers.push(myMarker)
+                }
+
+            },
+            error: function (xhr) {
+
+                console.log(xhr.responseText);
+                alert("Error has occurred..");
+            }
+        });
+    });
+
+
+    /** slider za cenu **/
+    $(function () {
+        $("#slider-range").slider({
+            range: true,
+            min: 0,
+            max: 1000,
+            values: [75, 1000],
+            slide: function (event, ui) {
+                $("#amount").val("€" + ui.values[0] + " - €" + ui.values[1]);
+            },
+            change: function (e, ui) {
+                rooms = $("select.sobe").children("option:selected").val();
+                if (rooms === "BROJ SOBA:") {
+                    rooms = 0
+                }
+                furn = $("select.namestenost").children("option:selected").val();
+                if (furn === "NAMEŠTENOST:") {
+                    furn = "SVE"
+                }
+                var min = $('#slider-range').slider("values")[0];
+                var max = $('#slider-range').slider("values")[1];
+                var minA = $('#slider-range-area').slider("values")[0];
+                var maxA = $('#slider-range-area').slider("values")[1];
+
+                $(".leaflet-marker-icon").remove();
+                $(".leaflet-popup").remove();
+                $(".leaflet-marker-shadow").remove();
+
+                var markers = []
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/GetFilter',
+                    data: { min: min, max: max, room: rooms, minA: minA, maxA: maxA, furn: furn },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; ++i) {
+                            var id;
+                            if (markers.length < 1) id = 0
+                            else id = markers[markers.length - 1]._id + 1;
+
+                            var popup = '<b>Grad:</b> ' + data[i].City +
+                                '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
+                                '<br/><b>Kvadratura:</b> ' + data[i].Area +
+                                '<br/><b>Broj soba:</b> ' + data[i].Rooms +
+                                '<br/><b>Cena:</b> ' + data[i].Price +
+                                '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
+                                '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+
+                            myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
+                            //.bindPopup(popup)
+                            myMarker._id = id
+
+                            var myPopup = myMarker.bindPopup(popup, {
+                                closeButton: false
+                            });
+                            map.addLayer(myMarker)
+                            markers.push(myMarker)
+                        }
+
+                    },
+                    error: function (xhr) {
+
+                        console.log(xhr.responseText);
+                        alert("Error has occurred..");
+                    }
+                });
+
+            },
+        });
+        $("#amount").val("€" + $("#slider-range").slider("values", 0) +
+            " - €" + $("#slider-range").slider("values", 1));
+
+    });
+
+
+    /** slider za kvadraturu **/
+    $(function () {
+        $("#slider-range-area").slider({
+            range: true,
+            min: 0,
+            max: 500,
+            values: [5, 500],
+            slide: function (event, ui) {
+                $("#area").val(ui.values[0] + "㎡ - " + ui.values[1] + "㎡");
+            },
+            change: function (e, ui) {
+                rooms = $("select.sobe").children("option:selected").val();
+                if (rooms === "BROJ SOBA:") {
+                    rooms = 0
+                }
+                furn = $("select.namestenost").children("option:selected").val();
+                if (furn === "NAMEŠTENOST:") {
+                    furn = "SVE"
+                }
+
+                var minA = $('#slider-range-area').slider("values")[0];
+                var maxA = $('#slider-range-area').slider("values")[1];
+                var min = $('#slider-range').slider("values")[0];
+                var max = $('#slider-range').slider("values")[1];
+
+                $(".leaflet-marker-icon").remove();
+                $(".leaflet-popup").remove();
+                $(".leaflet-marker-shadow").remove();
+
+                var markers = []
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/GetFilter',
+                    data: { min: min, max: max, room: rooms, minA: minA, maxA: maxA, furn: furn },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; ++i) {
+                            var id;
+                            if (markers.length < 1) id = 0
+                            else id = markers[markers.length - 1]._id + 1;
+
+                            var popup = '<b>Grad:</b> ' + data[i].City +
+                                '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
+                                '<br/><b>Kvadratura:</b> ' + data[i].Area +
+                                '<br/><b>Broj soba:</b> ' + data[i].Rooms +
+                                '<br/><b>Cena:</b> ' + data[i].Price +
+                                '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
+                                '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+
+                            myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
+                            //.bindPopup(popup)
+                            myMarker._id = id
+
+                            var myPopup = myMarker.bindPopup(popup, {
+                                closeButton: false
+                            });
+                            map.addLayer(myMarker)
+                            markers.push(myMarker)
+                        }
+
+                    },
+                    error: function (xhr) {
+
+                        console.log(xhr.responseText);
+                        alert("Error has occurred..");
+                    }
+                });
+
+            },
+        });
+        $("#area").val($("#slider-range-area").slider("values", 0) + "㎡ - " +
+            $("#slider-range-area").slider("values", 1) + "㎡");
+
+    });
+
+
+    /** filtriranje namestenost **/
+    $("select.namestenost").change(function () {
+
+        $(".leaflet-marker-icon").remove();
+        $(".leaflet-popup").remove();
+        $(".leaflet-marker-shadow").remove();
+
+        var min = $('#slider-range').slider("values")[0];
+        var max = $('#slider-range').slider("values")[1];
+        var minA = $('#slider-range-area').slider("values")[0];
+        var maxA = $('#slider-range-area').slider("values")[1];
+
+        rooms = $("select.sobe").children("option:selected").val();
+        if (rooms === "BROJ SOBA:") {
+            rooms = 0
+        }
+        furn = $(this).children("option:selected").val();
+        if (furn === "NAMEŠTENOST:") {
+            furn = "SVE"
+        }
+        var markers = []
+        $.ajax({
+            type: "POST",
+            url: '/Home/GetFilter',
+            data: { min: min, max: max, room: rooms, minA: minA, maxA: maxA, furn: furn },
+            success: function (data) {
+                for (var i = 0; i < data.length; ++i) {
+                    var id;
+                    if (markers.length < 1) id = 0
+                    else id = markers[markers.length - 1]._id + 1;
+                    var popup = '<b>Grad:</b> ' + data[i].City +
+                        '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
+                        '<br/><b>Kvadratura:</b> ' + data[i].Area +
+                        '<br/><b>Broj soba:</b> ' + data[i].Rooms +
+                        '<br/><b>Cena:</b> ' + data[i].Price +
+                        '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
+                        '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+
+                    myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
+                    //.bindPopup(popup)
+                    myMarker._id = id
+
+                    var myPopup = myMarker.bindPopup(popup, {
+                        closeButton: false
+                    });
+                    map.addLayer(myMarker)
+                    markers.push(myMarker)
+                }
+
+            },
+            error: function (xhr) {
+
+                console.log(xhr.responseText);
+                alert("Error has occurred..");
+            }
+        });
+    });
+
+
+    /** reset filtera **/
+    $("button.reset").on("click", function () {
+
+        $(".leaflet-marker-icon").remove();
+        $(".leaflet-popup").remove();
+        $(".leaflet-marker-shadow").remove();
+
+        $("#slider-range-area").slider({
+            range: true,
+            min: 0,
+            max: 500,
+            values: [5, 500],
+            slide: function (event, ui) {
+                $("#area").val(ui.values[0] + "㎡ - " + ui.values[1] + "㎡");
+            }
+        });
+        $("#area").val($("#slider-range-area").slider("values", 0) + "㎡ - " +
+            $("#slider-range-area").slider("values", 1) + "㎡");
+
+        $("#slider-range").slider({
+            range: true,
+            min: 0,
+            max: 1000,
+            values: [75, 1000],
+            slide: function (event, ui) {
+                $("#amount").val(ui.values[0] + "㎡ - " + ui.values[1] + "㎡");
+            }
+        });
+        $("#amount").val($("#slider-range").slider("values", 0) + "㎡ - " +
+            $("#slider-range").slider("values", 1) + "㎡");
+
+        $("select.sobe").val("BROJ SOBA:");
+        $("select.namestenost").val("NAMEŠTENOST:");
+
+
+        var min = 0;
+        var max = 1000;
+        var minA = 0;
+        var maxA = 1000;
+        var rooms = 0;
+        var furn = "SVE";
+
+        var markers = []
+        $.ajax({
+            type: "POST",
+            url: '/Home/GetFilter',
+            data: { min: min, max: max, room: rooms, minA: minA, maxA: maxA, furn: furn },
+            success: function (data) {
+                for (var i = 0; i < data.length; ++i) {
+                    var id;
+                    if (markers.length < 1) id = 0
+                    else id = markers[markers.length - 1]._id + 1;
+                    var popup = '<b>Grad:</b> ' + data[i].City +
+                        '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
+                        '<br/><b>Kvadratura:</b> ' + data[i].Area +
+                        '<br/><b>Broj soba:</b> ' + data[i].Rooms +
+                        '<br/><b>Cena:</b> ' + data[i].Price +
+                        '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
+                        '<br/><br/><b><a href="#" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+
+                    myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
+                    //.bindPopup(popup)
+                    myMarker._id = id
+
+                    var myPopup = myMarker.bindPopup(popup, {
+                        closeButton: false
+                    });
+                    map.addLayer(myMarker)
+                    markers.push(myMarker)
+                }
+
+            },
+            error: function (xhr) {
+
+                console.log(xhr.responseText);
+                alert("Error has occurred..");
+            }
+        });
+    });
+
+    $("body").on("click", ".detalji", function (e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id');
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: '/Home/Details',
+            contentType: "application/json; charset=utf-8",
+            data: { Id: id },
+            datatype: "json",
+            success: function (data) {
+                $('#myModalContent').html(data);
+                $('#myModal').modal(options);
+                $('#myModal').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+
+    $("#closbtn").click(function () {
+        $('#myModal').modal('hide');
+    });
+
+</script>
+
