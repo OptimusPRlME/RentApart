@@ -182,7 +182,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AppartmentController.cs" />
+    <Compile Include="Controllers\ApartmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -190,24 +190,25 @@
     </Compile>
     <Compile Include="Helpers\HTMLHelperExtension.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Appartment\address.cs" />
-    <Compile Include="Models\Appartment\addressNumber.cs" />
-    <Compile Include="Models\Appartment\apartment.cs" />
-    <Compile Include="Models\Appartment\AppartmentModel.cs" />
-    <Compile Include="Models\Appartment\country.cs" />
-    <Compile Include="Models\Appartment\district.cs" />
-    <Compile Include="Models\Appartment\location.cs" />
-    <Compile Include="Models\Appartment\municipality.cs" />
-    <Compile Include="Models\Appartment\options.cs" />
-    <Compile Include="Models\Appartment\pictures.cs" />
-    <Compile Include="Models\Appartment\region.cs" />
-    <Compile Include="Models\Appartment\user.cs" />
+    <Compile Include="Models\Apartment\address.cs" />
+    <Compile Include="Models\Apartment\addressNumber.cs" />
+    <Compile Include="Models\Apartment\apartment.cs" />
+    <Compile Include="Models\Apartment\ApartmentModel.cs" />
+    <Compile Include="Models\Apartment\country.cs" />
+    <Compile Include="Models\Apartment\district.cs" />
+    <Compile Include="Models\Apartment\location.cs" />
+    <Compile Include="Models\Apartment\municipality.cs" />
+    <Compile Include="Models\Apartment\options.cs" />
+    <Compile Include="Models\Apartment\pictures.cs" />
+    <Compile Include="Models\Apartment\region.cs" />
+    <Compile Include="Models\Apartment\user.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\AppartmentEditViewModel.cs" />
-    <Compile Include="ViewModels\AppartmentIndexViewModel.cs" />
+    <Compile Include="ViewModels\ApartmentEditViewModel.cs" />
+    <Compile Include="ViewModels\ApartmentIndexViewModel.cs" />
+    <Compile Include="ViewModels\UserIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\adminlte\css\AdminLTE.css" />
@@ -290,6 +291,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\default.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fontawesome.css" />
@@ -304,7 +306,12 @@
     <Content Include="Content\leaflet-search.mobile.min.css" />
     <Content Include="Content\leaflet-search.mobile.src.css" />
     <Content Include="Content\leaflet.css" />
+    <Content Include="Content\LineIcons.css" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\materialdesignicons.min.css" />
+    <Content Include="Content\nice-select.css" />
+    <Content Include="Content\slick.css" />
+    <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
@@ -4194,11 +4201,16 @@
     <Content Include="Scripts\adminlte\plugins\input-mask\phone-codes\phone-codes.json" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\bouncemarker.js" />
+    <Content Include="Scripts\count-up.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-vj-accordion-steps.js" />
+    <Content Include="Scripts\jquery.form-validator.min.js" />
+    <Content Include="Scripts\jquery.formatter.min.js" />
+    <Content Include="Scripts\jquery.nice-select.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -4207,7 +4219,10 @@
     <Content Include="Scripts\leaflet-search.src.js" />
     <Content Include="Scripts\leaflet.js" />
     <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\slick.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -4242,15 +4257,16 @@
     <Content Include="Views\Shared\_LayoutManage.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\Edit.cshtml" />
-    <Content Include="Views\Appartment\Index.cshtml" />
-    <Content Include="Views\Appartment\_ViewStart.cshtml" />
-    <Content Include="Views\Appartment\Create.cshtml" />
-    <Content Include="Views\Appartment\Activate.cshtml" />
-    <Content Include="Views\Appartment\Delete.cshtml" />
-    <Content Include="Views\Appartment\DeletePictureConfirmed.cshtml" />
-    <Content Include="Views\Appartment\Edit.cshtml" />
-    <Content Include="Views\Appartment\ShowDeleted.cshtml" />
+    <Content Include="Views\Apartment\Index.cshtml" />
+    <Content Include="Views\Apartment\_ViewStart.cshtml" />
+    <Content Include="Views\Apartment\Create.cshtml" />
+    <Content Include="Views\Apartment\Activate.cshtml" />
+    <Content Include="Views\Apartment\Delete.cshtml" />
+    <Content Include="Views\Apartment\DeletePictureConfirmed.cshtml" />
+    <Content Include="Views\Apartment\Edit.cshtml" />
+    <Content Include="Views\Apartment\ShowDeleted.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\Manage\UserAccounts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

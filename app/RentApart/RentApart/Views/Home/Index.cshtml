@@ -3,17 +3,22 @@
 }
 
 
-<div id='myModal' class='modal'>
+
+<div class="modal modal-default fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
             <div id='myModalContent'></div>
         </div>
     </div>
-
 </div>
 
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+
 <script>
 
     var mbx = new L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -154,47 +159,13 @@
         map.locate({ setView: true, maxZoom: 14 });
     });
 
-
-
     L.control.layers(baseMaps).addTo(map);
-
-
-    /** Stanovi **/
-    //$.ajax({
-    //    type: "POST",
-    //    url: '/Home/GetApartments',
-    //    success: function (data) {
-    //        var result = JSON.stringify(data);
-    //        for (var i = 0; i < result.length; ++i) {
-    //            var popup = '<b>Grad:</b> ' + data[i].City +
-    //                        '<br/><b>Adresa:</b> ' + data[i].Address + ' ' + data[i].AddressNumber +
-    //                        '<br/><b>Kvadratura:</b> ' + data[i].Area +
-    //                        '<br/><b>Broj soba:</b> ' + data[i].Rooms +
-    //                '<br/><b>Cena:</b> ' + data[i].Price +
-    //                '<br/><br/><b><a href ="#">Pogledaj Stan</a></b>' ;
-
-    //            L.marker([data[i].Lat, data[i].Lng], {bounceOnAdd: true})
-    //                .bindPopup(popup)
-    //                .addTo(map);
-    //        }
-
-    //    },
-    //    error: function (xhr) {
-
-    //        console.log(xhr.responseText);
-    //        alert("Error has occurred..");
-    //    }
-    //});
-
-
 
     var markers = []
     $.ajax({
         type: "POST",
         url: '/Home/GetApartments',
         success: function (data) {
-            //var result = JSON.stringify(data);
-            //console.log(data,result)
             for (var i = 0; i < data.length; ++i) {
                 var id;
                 if (markers.length < 1) id = 0
@@ -205,7 +176,7 @@
                     '<br/><b>Kvadratura:</b> ' + data[i].Area +
                     '<br/><b>Broj soba:</b> ' + data[i].Rooms +
                     '<br/><b>Cena:</b> ' + data[i].Price +
-                    '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+                    '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj stan</a></b>';
 
                 myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
                 myMarker._id = id
@@ -261,10 +232,9 @@
                         '<br/><b>Broj soba:</b> ' + data[i].Rooms +
                         '<br/><b>Cena:</b> ' + data[i].Price +
                         '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
-                        '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+                        '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj stan</a></b>';
 
                     myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
-                    //.bindPopup(popup)
                     myMarker._id = id
 
                     var myPopup = myMarker.bindPopup(popup, {
@@ -329,10 +299,9 @@
                                 '<br/><b>Broj soba:</b> ' + data[i].Rooms +
                                 '<br/><b>Cena:</b> ' + data[i].Price +
                                 '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
-                                '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+                                '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj stan</a></b>';
 
                             myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
-                            //.bindPopup(popup)
                             myMarker._id = id
 
                             var myPopup = myMarker.bindPopup(popup, {
@@ -404,10 +373,9 @@
                                 '<br/><b>Broj soba:</b> ' + data[i].Rooms +
                                 '<br/><b>Cena:</b> ' + data[i].Price +
                                 '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
-                                '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+                                '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj stan</a></b>';
 
                             myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
-                            //.bindPopup(popup)
                             myMarker._id = id
 
                             var myPopup = myMarker.bindPopup(popup, {
@@ -469,10 +437,9 @@
                         '<br/><b>Broj soba:</b> ' + data[i].Rooms +
                         '<br/><b>Cena:</b> ' + data[i].Price +
                         '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
-                        '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+                        '<br/><br/><b><a href="javascript:void(0);" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj stan</a></b>';
 
                     myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
-                    //.bindPopup(popup)
                     myMarker._id = id
 
                     var myPopup = myMarker.bindPopup(popup, {
@@ -550,10 +517,9 @@
                         '<br/><b>Broj soba:</b> ' + data[i].Rooms +
                         '<br/><b>Cena:</b> ' + data[i].Price +
                         '<br/><b>Nameštenost:</b> ' + data[i].Furnishing +
-                        '<br/><br/><b><a href="#" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj Stan</a></b>';
+                        '<br/><br/><b><a href="#" class="detalji" data-id="' + data[i].ApartmentId + '">Pogledaj stan</a></b>';
 
                     myMarker = L.marker([data[i].Lat, data[i].Lng], { bounceOnAdd: true })
-                    //.bindPopup(popup)
                     myMarker._id = id
 
                     var myPopup = myMarker.bindPopup(popup, {
@@ -584,8 +550,9 @@
             datatype: "json",
             success: function (data) {
                 $('#myModalContent').html(data);
-                $('#myModal').modal(options);
-                $('#myModal').modal('show');
+                $('#modal-default').modal(options);
+                $('#modal-default').modal('show');
+
             },
             error: function () {
                 alert("Dynamic content load failed.");
@@ -593,9 +560,12 @@
         });
     });
 
-    $("#closbtn").click(function () {
-        $('#myModal').modal('hide');
+    $("body").on("click", ".close", function (e) {
+        $('#modal-default').modal('hide');
     });
-
+    $('body').click(function (event) {
+        if (!$(event.target).closest('#modal-default').length && !$(event.target).is('#modal-default')) {
+            $('#modal-default').modal('hide');
+        }
+    });
 </script>
-

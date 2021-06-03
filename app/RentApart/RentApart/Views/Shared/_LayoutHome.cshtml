@@ -81,8 +81,8 @@
                             <button type="button" class="btn btn-light btn-sm reset">Poništi sve filtere</button>
                         </div>
 
-                        </div>
                     </div>
+                </div>
             </div>
         </nav>
         <!-- /.Navbar -->
@@ -114,67 +114,6 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     @Scripts.Render("~/bundles/geo")
 
-    <script>
-                    //$(document).ready(function () {
-
-                    //    $('.select2').select2({
-                    //        placeholder: "Izaberite mesto",
-                    //        dataType: 'json',
-                    //        minimumInputLength: 2,
-                    //        allowClear: true,
-                    //        ajax: {
-                    //            url: "/Home/GetCities",
-                    //            data: function (params) {
-                    //                return {
-                    //                    grad: params.term// search term
-                    //                };
-                    //            },
-                    //            processResults: function (data) {
-                    //                return {
-                    //                    results: $.map(data, function (item) {
-                    //                        return {
-                    //                            text: item.City,
-                    //                            id: item.LocationId
-                    //                        }
-                    //                    })
-                    //                };
-                    //            }
-                    //        }
-                    //    });
-                    //    });
-
-
-                    //    AjaxCall('/Home/GetRooms', null).done(function (response) {
-                    //        if (response.length > 0) {
-                    //            $('#brojsoba').html('');
-                    //            var options = '';
-                    //            options += '<option value="Select">Select</option>';
-                    //            for (var i = 0; i < response.length; i++) {
-                    //                options += '<option value="' + response[i].ApartmentId + '">' + response[i].Rooms + '</option>';
-                    //            }
-                    //            $('#brojsoba').append(options);
-
-                    //        }
-                    //    }).fail(function (error) {
-                    //        alert(error.StatusText);
-                    //    });
-
-
-                    //});
-
-                    //function AjaxCall(url, data, type) {
-                    //    return $.ajax({
-                    //        url: url,
-                    //        type: type ? type : 'GET',
-                    //        data: data,
-                    //        contentType: 'application/json'
-                    //    });
-                    //}
-
-
-
-
-    </script>
 
     @RenderBody()
 

@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<RentApart.Models.User>
-
 @{
     ViewBag.Title = "Moj nalog";
 }
@@ -30,30 +29,30 @@
                     <!-- form start -->
 
 
-                                <div class="box-body">
-                                    @foreach (var item in Model)
-                                    {
-                                        <div class="form-group">
-                                            @Html.DisplayNameFor(model => model.email)
-                                            @Html.DisplayFor(modelItem => item.email)
-                                        </div>
-                                        <div class="form-group">
-                                            @Html.DisplayNameFor(model => model.FirstName)
-                                            @Html.DisplayFor(modelItem => item.FirstName)
-                                        </div>
-                                        <div class="form-group">
-                                            @Html.DisplayNameFor(model => model.LastName)
-                                            @Html.DisplayFor(modelItem => item.LastName)
-                                        </div>
-                                        <div class="form-group">
-                                            @Html.DisplayNameFor(model => model.Mobile)
-                                            @Html.DisplayFor(modelItem => item.Mobile)
-                                        </div>
-                                        <div class="box-footer">
-                                            @Html.ActionLink("Izmeni", "Edit", new { id = item.Id }, new { @class="btn btn-primary", style = "color:white;" })
-                                        </div>
-                                    }
-                                </div>
+                    <div class="box-body">
+                        @foreach (var item in Model)
+                        {
+                            <div class="form-group">
+                                @Html.DisplayNameFor(model => model.email)
+                                @Html.DisplayFor(modelItem => item.email)
+                            </div>
+                            <div class="form-group">
+                                @Html.DisplayNameFor(model => model.FirstName)
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </div>
+                            <div class="form-group">
+                                @Html.DisplayNameFor(model => model.LastName)
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </div>
+                            <div class="form-group">
+                                @Html.DisplayNameFor(model => model.Mobile)
+                                @Html.DisplayFor(modelItem => item.Mobile)
+                            </div>
+                            <div class="box-footer">
+                                @Html.ActionLink("Izmeni", "Edit", new { id = item.Id }, new { @class = "btn btn-primary", style = "color:white;" })
+                            </div>
+                        }
+                    </div>
 
                 </div>
             </div>

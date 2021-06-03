@@ -1,27 +1,119 @@
-﻿@model RentApart.Models.Appartment.AppartmentModel
+﻿@model RentApart.ViewModels.ApartmentEditViewModel
 
 @{
     ViewBag.Title = "Details";
 }
+<style>
+    .example-modal .modal {
+        position: relative;
+        top: auto;
+        bottom: auto;
+        right: auto;
+        left: auto;
+        display: block;
+        z-index: 1;
+        width: 50%;
+    }
+
+    .example-modal .modal {
+        background: transparent !important;
+    }
+
+    .modal-dialog {
+        max-width: 50%;
+        width: 50%;
+        position: absolute;
+        right: 20px;
+    }
+</style>
+
 
 <div>
 
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title" id="myModalLabel">Detalji</h4>
+        <h4 class="modal-title">
+            @Html.DisplayFor(model => model.Address) @Html.DisplayFor(model => model.Number)
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+
+
+
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @{
+                    var i = 0;
+                    foreach (var item in Model.Pictures)
+                    {
+                        var itemClass = i++ == 0 ? "item active" : "item";
+                        <div class="carousel-item @itemClass" overflow:hidden">
+                            <img src="data:image/jpeg;base64,@item" class="d-block w-100">
+                        </div>
+                    }
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" data-bs-ride="carousel">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Prethodna</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" data-bs-ride="carousel">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Sledeca</span>
+            </button>
+        </div>
+
+
+        <ul class="item-features">
+            <li><span>@Html.DisplayFor(model => model.Price)</span> € </li>
+            <li><span>@Html.DisplayFor(model => model.Area)</span> kvadrata </li>
+            <li><span>@Html.DisplayFor(model => model.Rooms)</span> soba </li>
+            <li><span>@Html.DisplayFor(model => model.Floor)</span> sprat </li>
+            <li><span>@Html.DisplayFor(model => model.Furnishing)</span> opremljenost  </li>
+            <li><span>@Html.DisplayFor(model => model.Deposit) €</span> depozit  </li>
+        </ul>
+
+
+        <div class="item-description">
+            <h3 class="headline">Opis</h3>
+            <div style="padding-left:25px;">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+        </div>
+
+        <h3 class="headline">Detalji</h3>
+        <ul class="checked_list feature-list">
+            <li><strong>Godina izgradnje:</strong>  @Html.DisplayFor(model => model.YearOfConstruction)</li>
+            <li><strong>Parking:</strong> Da</li>
+            <li><strong>Klima:</strong> Da</li>
+            <li><strong>Grejanje:</strong> @Html.DisplayFor(model => model.Heating)</li>
+        </ul>
+
+        <h3 class="headline">Opcije</h3>
+        <ul class="checked_list feature-list">
+            <li>Alarm</li>
+            <li>Internet</li>
+            <li>Lift</li>
+            <li>Terasa</li>
+            <li>Podrum</li>
+            <li>Bicklana</li>
+        </ul>
+
+
+        <div class="modal-footer">
+
+            <div class="d-grid gap-2 col-3  mx-auto">
+                <button type="button" onclick="location.href='mailto:@Html.DisplayFor(model => model.Email)';" class="btn btn-primary">Kontakt</button></a>
+                <button type="button" class="btn btn-dark">Zakazivanje</button>
+            </div>
+
+        </div>
+
     </div>
 
 
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.AppartmentId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AppartmentId)
-        </dd>
 
 
-    </dl>
-</div> 

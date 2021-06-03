@@ -108,6 +108,26 @@ namespace RentApart.Models
         public string UserId { get; set; }
 
     }
+    [Table("User")]
+    public class Users
+    {
+        [Key]
+        public int Id { get; set; }
 
+        [Display(Name = "Email")]
+        public string email { get; set; }
+
+        [Display(Name = "Ime")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Prezime")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Mobilni")]
+        public string Mobile { get; set; }
+
+        public string UserId { get; set; }
+
+    }
 
 }

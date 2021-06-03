@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using RentApart.Models;
+using RentApart.ViewModels;
 
 namespace RentApart.Controllers
 {
@@ -35,9 +37,9 @@ namespace RentApart.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -63,7 +65,7 @@ namespace RentApart.Controllers
                 return View(db.User.Where(e => e.UserId == user).ToList());
             }
             return View();
-            
+
         }
 
         public ActionResult Edit(int id)
@@ -124,30 +126,6 @@ namespace RentApart.Controllers
             return View(model);
         }
 
-        //
-        //// GET: /Manage/Index
-        //public async Task<ActionResult> Index(ManageMessageId? message)
-        //{
-        //    ViewBag.StatusMessage =
-        //        message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-        //        : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-        //        : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-        //        : message == ManageMessageId.Error ? "An error has occurred."
-        //        : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-        //        : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-        //        : "";
-
-        //    var userId = User.Identity.GetUserId();
-        //    var model = new IndexViewModel
-        //    {
-        //        HasPassword = HasPassword(),
-        //        PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-        //        TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-        //        Logins = await UserManager.GetLoginsAsync(userId),
-        //        BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-        //    };
-        //    return View(model);
-        //}
 
         //
         // POST: /Manage/RemoveLogin
@@ -377,7 +355,7 @@ namespace RentApart.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -428,8 +406,39 @@ namespace RentApart.Controllers
             Error
         }
 
+        // GET: /Manage/ChangePassword
+        public ActionResult UserAccounts()
+        {
+            UserIndexViewModel model = new UserIndexViewModel();
 
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                model.Users = getUsers(db);
+            }
+            return View(model);
+        }
 
-    #endregion
-}
+        private List<UserIndexViewModel.UsersViewModel> getUsers(ApplicationDbContext db)
+        {
+
+            var users = db.User.Select(x => new
+            {
+                UserId = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.email,
+            }).AsEnumerable()
+                 .Select(x => new UserIndexViewModel.UsersViewModel
+                 {
+                     UserId = x.UserId,
+                     FirstName = x.FirstName,
+                     LastName = x.LastName,
+                     Email = x.Email,
+                 })
+                 .ToList();
+
+            return users;
+        }
+        #endregion
+    }
 }
