@@ -6,6 +6,7 @@ Projekat "RentApart" predstavlja Web aplikaciju za izdavanje stanova i deo je pr
 
 1. '/app' - Aplikacija
 2. '/Dokumentacija' - Dokumentacija
+2. '/db' - Skripte za kreiranje baze i popunjavanje tabela
 
 # Tim
 Tim sačinjavaju 3 člana:
